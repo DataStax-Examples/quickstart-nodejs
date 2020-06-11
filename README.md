@@ -1,109 +1,177 @@
-# DataStax Node.js Driver for Apache Cassandra Quickstart
+# DataStax Node.js Quickstart using Netflix
 
-A basic demo CRUD application using the DataStax Node.js Driver for Apache Cassandra. 
-Run the [quickstart-complete.js](quickstart-complete.js) file if you want to skip the exercise and run the application with the complete code.
+An introduction to using the Cassandra database with well-defined steps to optimize your learning. Using a Netflix dataset for sample data, your locally running Cassandra database will contain a minimal set of show data for you to customize and experiment with.
 
-Contributors: [Rebecca Mills](https://github.com/beccam)
+Contributors:
+
+* [Jeff Banks](https://github.com/jeffbanks)
+* [Chris Splinter](https://github.com/csplinter)
+
+## Objectives
+* Leverage DataStax driver APIs for interaction with a local running Cassandra database.
+* Set up a Cassandra Query Language (CQL) session and perform operations such as creating, reading, and writing.
+* Use the Netflix show dataset as example information across three differently constructed tables.
+* Observe how the partition key along with clustering keys produce an optimized experience.
+* Have fun!
 
 ## Project Layout
 
-* [quickstart.js](src/quickstart.js) - main application file with space to fill in CRUD operation code
-* [users.cql](users.cql) - Use this file to create the schema 
+* [app.js](app.js) - main application file
 
-## Objectives
+## How this works
+To get started, read through the comments in the `app.js` to familiarize yourself with the steps for interacting with your own Cassandra database. The functions invoked by the `app.js` are created to provide more flexibility for modifications as you learn.
 
-* To demonstrate how to perform basic CRUD operations with the DataStax Node.js Driver.
-* The intent is to help users get up and running quickly with the driver. 
+## Setup and running
 
-## How this Sample Works
-This project walks through basic CRUD operations using Cassandra. The demo application will first insert a row of user data, select that same row back out, update the row and finally delete the user. The README includes the code snippets to be filled in to the main application code to complete the functionality.
+### Prerequisites
+If using [DataStax Desktop](https://www.datastax.com/blog/2020/05/learn-cassandra-datastax-desktop), no prerequisites will be required. The Cassandra instance is provided with the DataStax Desktop stack as part of container provisioning.
 
-## Prerequisites
-  * A running instance of [Apache Cassandra®](http://cassandra.apache.org/download/) 1.2+
+If NOT using DataStax Desktop, spin up your own local instance of Cassandra exposing its address and port to align with the settings in the **app.js** file.  You will need to install and perform the following steps:
+
+  * Install [Apache Cassandra®](http://cassandra.apache.org/download/) 3.x
   * [Node.js](https://nodejs.org/en/download/) server environment
   * Use npm to install the driver: `npm install cassandra-driver`
-  
-  ## Create the keyspace and table
-The `users.cql` file provides the schema used for this project:
+  * Create the keyspace and table.  The `netflix-shows.cql` file provides the schema used for this project.
 
-```sql
-CREATE KEYSPACE demo
-    WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
 
-CREATE TABLE demo.users (
-    lastname text PRIMARY KEY,
-    age int,
-    city text,
-    email text,
-    firstname text);
-```
+All of the connection code is contained in the `app.js` file.  The `cassandra.Client()` API is used to connect to your instance of Cassandra.
 
-## Connect to your cluster
-
-All of our code is contained in the `quickstart.js` file. 
-The `cassandra.Client()` instance connects to our cluster.
-You need to provide the address or host name of your node and your local data center name.
 ```javascipt
-// TO DO: Fill in your own host and data center
-const client = new cassandra.Client({ 
-  contactPoints: ['127.0.0.1'], 
-  localDataCenter: 'datacenter1',  
-  keyspace: 'demo' 
+const client = new cassandra.Client({
+  contactPoints: ['127.0.0.1'],
+  localDataCenter: 'dc1',
+  keyspace: 'demo'
 });
 ```
 
-## CRUD Operations
-Fill the code in the functions that will add a user, get a user, update a user and delete a user from the table with the driver.
+## Running
 
-### INSERT a user
-```javascript
-function insertUser(lastname, age, city, email, firstname) {
-  // TO DO: execute a prepared statement that inserts one user into the table
-  const insert = 'INSERT INTO users (lastname, age, city, email, firstname) VALUES (?,?,?,?,?)';
-  const params = [ lastname, age, city, email, firstname ];
-  return client.execute(insert, params, { prepare : true });
-}
+Simply kickoff the app from the command line.
+
+> node app.js
+
+### Console output
 ```
-### SELECT a user
-```javascript
-function selectUser(lastname) {
-  // TO DO: execute a prepared statement that retrieves one user from the table
-  const select = 'SELECT firstname, age FROM users WHERE lastname = ?';
-  const params = [ lastname ] ;
-  return client.execute(select, params, { prepare : true });
+Connecting - step 1
+Creating a keyspace - step 2
+Creating Keyspace: demo
+Creating tables - step 3
+Creating Primary Table
+Creating Titles By Date Table
+Creating Titles By Rating Table
+Inserting records - step 4
+Inserting into Primary Table for title: Life of Jimmy
+Inserting into Primary Table for title: Pulp Fiction
+Inserting into TitlesByDate Table for title: Life of Jimmy
+Inserting into TitlesByDate Table for title: Pulp Fiction
+Inserting into TitlesByRating Table for title: Life of Jimmy
+Inserting into TitlesByRating Table for title: Pulp Fiction
+Reading records - step 5
+Selecting all from Table: netflix_master
+Rows in result: 2
+Row {
+  title: 'Life of Jimmy',
+  show_id: 100000000,
+  cast: [ 'Jimmy' ],
+  country: [ 'United States' ],
+  date_added: LocalDate {
+    date: 2020-07-01T00:00:00.000Z,
+    _value: null,
+    year: 2020,
+    month: 7,
+    day: 1
+  },
+  description: 'Experiences of a guitar playing DataStax developer',
+  director: [ 'Franky J' ],
+  duration: '42 min',
+  listed_in: [ 'Action' ],
+  rating: 'TV-18',
+  release_year: 2020,
+  type: 'Movie'
 }
+Row {
+  title: 'Pulp Fiction',
+  show_id: 100000001,
+  cast: [
+    'John Travolta',
+    'Samuel L. Jackson',
+    'Uma Thurman',
+    'Harvey Keitel',
+    'Tim Roth',
+    'Amanda Plummer',
+    'Maria de Medeiros',
+    'Ving Rhames',
+    'Eric Stoltz',
+    'Rosanna Arquette',
+    'Christopher Walken',
+    'Bruce Willis'
+  ],
+  country: [ 'United States' ],
+  date_added: LocalDate {
+    date: 2019-02-19T00:00:00.000Z,
+    _value: null,
+    year: 2019,
+    month: 2,
+    day: 19
+  },
+  description: 'This stylized crime caper weaves together stories ...',
+  director: [ 'Quentin Tarantino' ],
+  duration: '42 min',
+  listed_in: [ 'Classic Movies', 'Cult Movies', 'Dramas' ],
+  rating: 'R',
+  release_year: 1994,
+  type: 'Movie'
+}
+Selecting all from Table: netflix_titles_by_rating
+Rows in result: 2
+Row { rating: 'TV-18', show_id: 100000000, title: 'Life of Jimmy' }
+Row { rating: 'R', show_id: 100000001, title: 'Pulp Fiction' }
+Selecting all from Table: netflix_titles_by_date
+Rows in result: 2
+Row {
+  release_year: 2020,
+  date_added: LocalDate {
+    date: 2020-07-01T00:00:00.000Z,
+    _value: null,
+    year: 2020,
+    month: 7,
+    day: 1
+  },
+  show_id: 100000000,
+  title: 'Life of Jimmy',
+  type: 'Movie'
+}
+Row {
+  release_year: 1994,
+  date_added: LocalDate {
+    date: 2019-02-19T00:00:00.000Z,
+    _value: null,
+    year: 2019,
+    month: 2,
+    day: 19
+  },
+  show_id: 100000001,
+  title: 'Pulp Fiction',
+  type: 'Movie'
+}
+Selecting all by Title: Pulp Fiction from Primary table
+Rows in result: 1
+Row { rating: 'R', show_id: 100000001, title: 'Pulp Fiction' }
+Selecting all by Title: Life of Jimmy from Primary table
+Rows in result: 1
+Row { rating: 'TV-18', show_id: 100000000, title: 'Life of Jimmy' }
+Updating record with read - step 6
+Updating director list by Title: Pulp Fiction and Show ID: 100000001 from Primary table
+Selecting director by Title: Pulp Fiction from Primary table
+Rows in result: 1
+Row { director: [ 'Quentin Jerome Tarantino' ] }
+Shutting down client - step 7
 ```
 
-### UPDATE a user's age
-```javascript
-function updateUser(age, lastname) {
-  // TO DO: execute a prepared statement that updates the age of one user
-  const update = 'UPDATE users SET age = ? WHERE lastname = ?';
-  return client.execute(update, [ age, lastname ], { prepare : true } )
-}
-```   
+### Having trouble?
+Are you getting errors reported but can't figure out what to do next?  Copy your log output, document any details, and head over to the [DataStax Community](https://community.datastax.com/spaces/131/datastax-desktop.html) to get some assistance.
 
-### DELETE a user
-```javascript
-function deleteUser(lastname) {
-  // TO DO: execute a prepared that deletes one user from the table
-  const remove = 'DELETE FROM users WHERE lastname = ?';
-  const params = [ lastname ];
-  return client.execute(remove, params, { prepare: true })
-}
-```
- ## License
-Copyright 2019 Rebecca Mills
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.   
+### Questions or comments?
+If you have any questions or want to post a feature request, visit the [Desktop space at DataStax Community](https://community.datastax.com/spaces/131/datastax-desktop.html)
 
