@@ -161,7 +161,7 @@ async function insertTitlesByRatingRecords() {
 
 async function readAll(tableName) {
 
-  const selectAll = 'SELECT * FROM ' + tableName + ' ALLOW FILTERING;'
+  const selectAll = 'SELECT * FROM ' + tableName + ';'
   console.log('Selecting all from Table: %s', tableName)
   return client.execute(selectAll)
 
@@ -169,7 +169,7 @@ async function readAll(tableName) {
 
 async function readAllInPrimaryByTitle(titleName) {
 
-  const selectAll = 'SELECT * FROM ' + TABLE_NETFLIX_PRIMARY + ' WHERE title = ? ALLOW FILTERING;'
+  const selectAll = 'SELECT * FROM ' + TABLE_NETFLIX_PRIMARY + ' WHERE title = ? ;'
   const paramsSelect = [titleName]
 
   console.log('Selecting all by Title: %s from Primary table', titleName)
