@@ -1,4 +1,4 @@
-# DataStax Node.js Quickstart using Netflix
+# DataStax NodeJS Quickstart using Netflix
 
 An introduction to using the Cassandra database with well-defined steps to optimize your learning. Using a Netflix dataset for sample data, your locally running Cassandra database will contain a minimal set of show data for you to customize and experiment with.
 
