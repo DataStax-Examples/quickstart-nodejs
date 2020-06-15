@@ -17,6 +17,7 @@ Contributors:
 ## Project Layout
 
 * [app.js](app.js) - main application file
+* [netflix-shows](netflix-shows.cql) - foundation CQL for reference or use
 
 ## How this works
 To get started, read through the comments in the `app.js` to familiarize yourself with the steps for interacting with your own Cassandra database. The functions invoked by the `app.js` are created to provide more flexibility for modifications as you learn.
