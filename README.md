@@ -1,4 +1,4 @@
-# DataStax NodeJS Quickstart using Netflix
+# DataStax Node.js Quickstart using Netflix
 
 An introduction to using the Cassandra database with well-defined steps to optimize your learning. Using a Netflix dataset for sample data, your locally running Cassandra database will contain a minimal set of show data for you to customize and experiment with.
 
@@ -54,12 +54,15 @@ Simply kickoff the app from the command line.
 ### Console output
 ```
 Connecting - step 1
+
 Creating a keyspace - step 2
 Creating Keyspace: demo
+
 Creating tables - step 3
 Creating Primary Table
 Creating Titles By Date Table
 Creating Titles By Rating Table
+
 Inserting records - step 4
 Inserting into Primary Table for title: Life of Jimmy
 Inserting into Primary Table for title: Pulp Fiction
@@ -67,6 +70,7 @@ Inserting into TitlesByDate Table for title: Life of Jimmy
 Inserting into TitlesByDate Table for title: Pulp Fiction
 Inserting into TitlesByRating Table for title: Life of Jimmy
 Inserting into TitlesByRating Table for title: Pulp Fiction
+
 Reading records - step 5
 Selecting all from Table: netflix_master
 Rows in result: 2
@@ -161,11 +165,13 @@ Row { rating: 'R', show_id: 100000001, title: 'Pulp Fiction' }
 Selecting all by Title: Life of Jimmy from Primary table
 Rows in result: 1
 Row { rating: 'TV-18', show_id: 100000000, title: 'Life of Jimmy' }
+
 Updating record with read - step 6
 Updating director list by Title: Pulp Fiction and Show ID: 100000001 from Primary table
 Selecting director by Title: Pulp Fiction from Primary table
 Rows in result: 1
 Row { director: [ 'Quentin Jerome Tarantino' ] }
+
 Shutting down client - step 7
 ```
 
